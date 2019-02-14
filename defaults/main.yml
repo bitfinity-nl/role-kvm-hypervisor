@@ -1,0 +1,39 @@
+---
+  # Title: role-kvm-hypervisor
+  #
+  # Author: bitfinity.nl
+  # File: defaults/main.yml
+  #
+  # Description:
+  #   KVM Hypervisor based on Ubuntu server
+
+  # -- netplan settings --
+  #
+  # Variable(s):
+  #   np_interface   : 'ens3'                 # On which interface the bridge applies to.
+  #   np_use_dhcp4   : 'true' or 'false'      # Whether DHCP is used static. (Default=true)
+  #   np_ipaddress   : '192.168.0.1/24'       # Static IP
+  #   np_gateway4    : '192.168.0.254'        # Default gateway 
+  #   np_nameservers : '8.8.8.8, 8.8.4.4'     # DNS server(s)
+  #
+  np_interface   : 'ens3'
+  np_use_dhcp4   : 'false'
+  np_ipaddress   : '192.26.10.137/24'
+  np_gateway4    : '192.26.10.1'
+  np_nameservers : '192.26.10.1' 
+
+  # -- KVM network settings --
+  #
+  # Variable(s):
+  #   kvm_vibr_name : 'vibr0'                 # Name of the KVM bridge
+  #
+  #
+  kvm_vibr_name  : 'vibr0' 
+
+  # -- KVM Global settings --
+  # 
+  # Variable(s):
+  #   kvm_user_pass : 'paswword'             # Default password for the Local KVM user.(Username=kvm)   
+  #
+  kvm_user_name  : 'kvm'
+  kvm_user_pass  : 'test'

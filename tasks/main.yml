@@ -1,0 +1,14 @@
+---
+  # Title: role-kvm-hypervisor
+  #
+  # Author: bitfinity.nl
+  # File: tasks/main.yml
+  #
+  # Description:
+  #   KVM Hypervisor based on Ubuntu server
+
+  - name: "Type:Server, For OS: Ubuntu 18.04LTS, Arch: amd64, State: Enabled"
+    import_tasks: ubt-1804-amd64-server.yml
+    when:
+      - ansible_distribution_version == '18.04'
+      - ansible_architecture == 'x86_64'

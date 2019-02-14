@@ -1,0 +1,19 @@
+---
+  # Title: role-kvm-hypervisor
+  #
+  # Author: bitfinity.nl
+  # File: handlers/main.yml
+  #
+  # Description:
+  #   KVM Hypervisor based on Ubuntu server
+
+  - name: activate-netplan
+    shell: netplan apply
+    
+  - name: activate-bridge
+    shell: "{{ item }}"
+    with_items:
+      - virsh net-define /etc/libvirt/qemu/networks/"{{ kvm_vibr_name }}".xml
+      - virsh net-start "{{ kvm_vibr_name }}"
+      - virsh net-autostart "{{ kvm_vibr_name }}"
+    ignore_errors: yes

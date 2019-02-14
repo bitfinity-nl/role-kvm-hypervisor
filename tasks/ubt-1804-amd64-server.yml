@@ -1,0 +1,88 @@
+---
+  # Title: role-kvm-hypervisor
+  #
+  # Author: bitfinity.nl
+  # File: tasks/ubt-1804-amd64-server.yml
+  #
+  # Description:
+  #   KVM Hypervisor based on Ubuntu server
+  # https://amoldighe.github.io/2017/12/30/kvm-bridge-networking/
+
+  - name: "Install additional packages"
+    apt: 
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - qemu-kvm 
+      - libvirt-clients 
+      - libvirt-daemon-system 
+      - bridge-utils
+      - virt-manager
+
+  - name: "Generate password for KVM user {{ kvm_user_name }}"
+    command: "mkpasswd --method=sha-512 {{ kvm_user_pass }}"
+    register: encrypted_password
+    delegate_to: nl-bel-lt05
+
+  - name: "Create default user for managing KVM"
+    user:
+      name: "{{ kvm_user_name }}"
+      password: "{{ encrypted_password.stdout }}"
+      shell: /bin/bash
+      groups: libvirt,libvirt-qemu
+      append: yes
+
+  - name : "Transfer virt-manager.desktop.j2 to /home/{{ kvm_user_name }}/Desktop/virt-manager.desktop"
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: kvm
+      group: users
+      mode: 0755
+    with_items:
+      - { src: 'virt-manager.desktop.j2', dest: '/home/{{ kvm_user_name }}/Desktop/virt-manager.desktop' }
+
+  - name: "Transfer netplan DHCP networking template(s)"
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0644
+    with_items:
+      - { src: 'netplan-networking-dhcp.yml.j2', dest: '/etc/netplan/01-netcfg.yaml' }
+    notify:
+      - activate-netplan
+    when:
+      - np_use_dhcp4 == 'true'
+
+  - name: "Transfer KVM virtual network bridge template(s)"
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0600
+    with_items:
+      - { src: 'kvm-virtual-bridge.yml.j2', dest: '/etc/libvirt/qemu/networks/{{ kvm_vibr_name }}.xml' }
+    notify:
+      - activate-bridge
+
+  - name: "Transfer netplan STATIC networking template(s)"
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0644
+    with_items:
+      - { src: 'netplan-networking-static.yml.j2', dest: '/etc/netplan/01-netcfg.yaml' }
+    notify:
+      - activate-netplan
+    when:
+      - np_use_dhcp4 == 'false'
+
+
+
+    

@@ -1,0 +1,17 @@
+network:
+    version: 2
+    renderer: networkd
+    ethernets:
+        {{ np_interface }}:
+            dhcp4: true
+    bridges:
+        {{ kvm_vibr_name }}:
+            interfaces: [{{ np_interface }}]
+            dhcp4: {{ np_use_dhcp4 }}
+            addresses: [{{ np_ipaddress }}, ]
+            gateway4: {{ np_gateway4 }}
+            nameservers:
+                    addresses: [{{ np_nameservers }}]
+            parameters:
+                stp: false
+                forward-delay: 0
