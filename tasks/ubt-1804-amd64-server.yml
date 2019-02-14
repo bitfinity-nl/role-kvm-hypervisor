@@ -33,6 +33,14 @@
       groups: libvirt,libvirt-qemu
       append: yes
 
+  - name: "Create /home/{{ kvm_user_name }}/Desktop/"
+    file:
+      path: "/home/{{ kvm_user_name }}/Desktop/"
+      owner: "{{ kvm_user_name }}"
+      group: "{{ kvm_user_name }}"
+      mode: 0755
+      state: directory
+
   - name : "Transfer virt-manager.desktop.j2 to /home/{{ kvm_user_name }}/Desktop/virt-manager.desktop"
     template:
       src: "{{ item.src }}"
