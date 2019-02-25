@@ -61,7 +61,8 @@
     with_items:
       - { src: 'netplan-networking-dhcp.yml.j2', dest: '/etc/netplan/01-netcfg.yaml' }
     notify:
-      - activate-netplan
+#      - activate-netplan
+      - reboot-hypervisor
     when:
       - np_use_dhcp4 == 'true'
 
@@ -87,7 +88,8 @@
     with_items:
       - { src: 'netplan-networking-static.yml.j2', dest: '/etc/netplan/01-netcfg.yaml' }
     notify:
-      - activate-netplan
+#      - activate-netplan
+      - reboot-hypervisor
     when:
       - np_use_dhcp4 == 'false'
 

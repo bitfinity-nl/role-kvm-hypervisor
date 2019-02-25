@@ -17,3 +17,6 @@
       - virsh net-start "{{ kvm_vibr_name }}"
       - virsh net-autostart "{{ kvm_vibr_name }}"
     ignore_errors: yes
+
+  - name: reboot-hypervisor
+    reboot:
