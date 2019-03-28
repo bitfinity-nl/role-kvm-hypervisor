@@ -19,6 +19,7 @@
       - libvirt-daemon-system 
       - bridge-utils
       - virt-manager
+      - libguestfs-tools
 
   - name: "Generate password for KVM user {{ kvm_user_name }}"
     command: "mkpasswd --method=sha-512 {{ kvm_user_pass }}"
